@@ -1,7 +1,7 @@
 * xref-js2
 
-=xref-js2= is a package for navigating to definitions or references in
-JavaScript projects in Emacs.
+=xref-js2= adds navigation to definitions or references to JavaScript projects
+in Emacs.
 
 =xref-js2= adds an xref backend for JavaScript files.
 
