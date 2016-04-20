@@ -64,7 +64,7 @@
 
 
 (defcustom xref-js2-definitions-regexps '("\\b%s\\b[\\s]*[:=][^=]"
-                                          "function[\\s]\\b%s\\b")
+                                          "function[\\s]+\\b%s\\b")
   "List of regular expressions that match definitions of a symbol.
 In each regexp string, '%s' is expanded with the searched symbol."
   :type 'list
