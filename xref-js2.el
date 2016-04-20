@@ -6,7 +6,7 @@
 ;; Keywords: javascript, convenience, tools
 ;; Version: 1.0
 ;; Package: xref-js2
-;; Package-Requires: ((emacs "25") (projectile "0.13.0") (js2-mode "20150909"))
+;; Package-Requires: ((emacs "25") (js2-mode "20150909"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@
 (require 'seq)
 (require 'map)
 (require 'js2-mode)
-(require 'projectile)
+(require 'vc)
 
 (defcustom xref-js2-ag-arguments '("--js" "--noheading" "--nocolor")
   "Default arguments passed to ag."
@@ -149,7 +149,7 @@ concatenated together into one regexp, expanding occurrences of
                      regexps) "|"))
 
 (defun xref-js2--find-candidates (symbol regexp)
-  (let ((default-directory (projectile-project-root))
+  (let ((default-directory (xref-js2--root-dir))
         matches)
     (with-temp-buffer
       (apply #'process-file (executable-find "ag") nil t nil
@@ -191,6 +191,12 @@ Filtering is done using the AST from js2-mode."
                   (or (js2-string-node-p node)
                       (js2-comment-node-p node))))))))))
 
+(defun xref-js2--root-dir ()
+  "Return the root directory of the project."
+  (or (ignore-errors
+        (vc-root-dir))
+      (user-error "You are not in a project")))
+
 
 (defun xref-js2--candidate (symbol match)
   "Return a candidate alist built from SYMBOL and a raw MATCH result.
@@ -201,7 +207,7 @@ The MATCH is one output result from the ag search."
     ;; search result, we trim the output.
     (when (> (seq-length match) 100)
       (setq match (concat (seq-take match 100) "...")))
-    (list (cons 'file (projectile-expand-root (car attrs)))
+    (list (cons 'file (expand-file-name (car attrs) (xref-js2--root-dir)))
           (cons 'line (string-to-number (cadr attrs)))
           (cons 'symbol symbol)
           (cons 'match match))))
