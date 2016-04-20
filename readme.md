@@ -22,5 +22,8 @@ pass on result candidates and eliminates possible false positives using
 
 ## Demo
 
+### Jumping to definitions and back
 ![jump-to-definition.gif](screencasts/jump-to-definition.gif)
+
+### Finding references
 ![jump-to-references.gif](screencasts/jump-to-references.gif)
