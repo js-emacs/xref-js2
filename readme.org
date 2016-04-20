@@ -19,6 +19,5 @@ pass on result candidates and eliminates possible false positives using
 
 - Emacs 25.1
 - `ag' (the [[http://geoff.greer.fm/ag/][silver searcher]])
-- projectile
 - js2-mode
 
