@@ -70,10 +70,7 @@ In each regexp string, '%s' is expanded with the searched symbol."
   :type 'list
   :group 'xref-js2)
 
-(defcustom xref-js2-references-regexps '("\\b%s\\b\\.[\\w]+"
-                                         "\\b%s\\b[\\s]*\\("
-                                         "\\.\\b%s\\b[\\s]*[^=]"
-                                         "[:=][\\s]*\\b%s\\b")
+(defcustom xref-js2-references-regexps '("\\b%s\\b(?!\\s*[:=][^=])")
   "List of regular expressions that match references to a symbol.
 In each regexp string, '%s' is expanded with the searched symbol."
   :type 'list
