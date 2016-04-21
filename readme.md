@@ -35,6 +35,14 @@ Then you need to add the xref backend:
   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
 ```
 
+## Keybindings
+
+`xref-js2` uses the `xref`, so the same keybindings and UI as other xref backends is used:
+
+- `M-.` Jump to definition
+- `M-?` Jump to references
+- `M-,` Pop back to where `M-.` was last invoked
+
 ## Demo
 
 ### Jumping to definitions and back
