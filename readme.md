@@ -20,6 +20,12 @@ pass on result candidates and eliminates possible false positives using
 - `ag` (the [silver searcher](http://geoff.greer.fm/ag/))
 - js2-mode
 
+If you use `js2-mode`, `M-.` will be bound by `js2`, you might want to unbind it:
+
+```
+(define-key js2-mode-map (kbd "M-.") nil)
+```
+
 ## Demo
 
 ### Jumping to definitions and back
