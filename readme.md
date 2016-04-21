@@ -32,7 +32,7 @@ Then you need to add the xref backend:
 
 ```
 (add-hook 'js2-mode-hook (lambda ()
-  (add-hook 'xref-backend-functions #'xref-js2--xref-backend nil t)))
+  (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
 ```
 
 ## Demo

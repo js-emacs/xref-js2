@@ -76,7 +76,7 @@ In each regexp string, '%s' is expanded with the searched symbol."
   :type 'list
   :group 'xref-js2)
 
-(defun xref-js2--xref-backend ()
+(defun xref-js2-xref-backend ()
   "Xref-Js2 backend for Xref."
   'xref-js2)
 
