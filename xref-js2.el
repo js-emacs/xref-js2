@@ -193,6 +193,8 @@ Filtering is done using the AST from js2-mode."
 (defun xref-js2--root-dir ()
   "Return the root directory of the project."
   (or (ignore-errors
+        (projectile-project-root))
+      (ignore-errors
         (vc-root-dir))
       (user-error "You are not in a project")))
 
