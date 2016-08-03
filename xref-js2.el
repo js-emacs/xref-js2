@@ -3,6 +3,7 @@
 ;; Copyright (C) 2016 Nicolas Petton
 
 ;; Author: Nicolas Petton <nicolas@petton.fr>
+;; URL: https://github.com/NicolasPetton/xref-js2
 ;; Keywords: javascript, convenience, tools
 ;; Version: 1.0
 ;; Package: xref-js2
@@ -192,6 +193,8 @@ Filtering is done using the AST from js2-mode."
 (defun xref-js2--root-dir ()
   "Return the root directory of the project."
   (or (ignore-errors
+        (projectile-project-root))
+      (ignore-errors
         (vc-root-dir))
       (user-error "You are not in a project")))
 
