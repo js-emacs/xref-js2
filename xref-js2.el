@@ -3,6 +3,7 @@
 ;; Copyright (C) 2016 Nicolas Petton
 
 ;; Author: Nicolas Petton <nicolas@petton.fr>
+;; URL: https://github.com/NicolasPetton/xref-js2
 ;; Keywords: javascript, convenience, tools
 ;; Version: 1.0
 ;; Package: xref-js2
