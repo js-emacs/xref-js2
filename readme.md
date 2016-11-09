@@ -1,5 +1,7 @@
 # xref-js2
 
+The GitHub repository is mirrored from [https://petton.fr/git/nico/xref-js2](https://petton.fr/git/nico/xref-js2).
+
 `xref-js2` adds navigation to definitions or references to JavaScript projects
 in Emacs.
 
