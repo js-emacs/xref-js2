@@ -186,8 +186,8 @@ concatenated together into one regexp, expanding occurrences of
                                      (funcall (cdr search-tuple) regexp))))
         (apply #'process-file (executable-find search-program) nil t nil search-args))
 
-      (goto-char (point-min))
-      (while (re-search-forward "^\\(.+\\)$" nil t)
+      (goto-char (point-max)) ;; NOTE maybe redundant
+      (while (re-search-backward "^\\(.+\\)$" nil t)
         (push (match-string-no-properties 1) matches)))
     (seq-remove #'xref-js2--false-positive
                 (seq-map (lambda (match)
