@@ -45,8 +45,32 @@
 (require 'js2-mode)
 (require 'vc)
 
+(defcustom xref-js2-search-program 'ag
+  "The backend program used for searching"
+  :type 'symbol
+  :group 'xref-js2
+  :options '(ag rg))
+
 (defcustom xref-js2-ag-arguments '("--js" "--noheading" "--nocolor")
   "Default arguments passed to ag."
+  :type 'list
+  :group 'xref-js2)
+
+(defcustom xref-js2-js-extensions '("js" "mjs" "jsx" "ts" "tsx")
+  "Extensions for file types xref-js2 is expected to search.
+warning, this is currently only supported by ripgrep, not ag.
+
+if an empty-list/nil no filtering based on file extension will
+take place."
+  :type 'list
+  :group 'xref-js2)
+
+(defcustom xref-js2-rg-arguments '("--no-heading"
+                                   "--line-number"    ; not activated by default on comint
+                                   "--pcre2"          ; provides regexp backtracking
+                                   "--ignore-case"    ; ag is case insensitive by default
+                                   "--color" "never")
+  "Default arguments passed to ripgrep."
   :type 'list
   :group 'xref-js2)
 
@@ -62,7 +86,6 @@
   "List of files to be ignored when performing a search."
   :type 'list
   :group 'xref-js2)
-
 
 (defcustom xref-js2-definitions-regexps '("\\b%s\\b[\\s]*[:=][^=]"
                                           "function[\\s]+\\b%s\\b"
@@ -153,15 +176,16 @@ concatenated together into one regexp, expanding occurrences of
   (let ((default-directory (xref-js2--root-dir))
         matches)
     (with-temp-buffer
-      (apply #'process-file (executable-find "ag") nil t nil
-             `(,@xref-js2-ag-arguments
-               ,@(seq-mapcat (lambda (dir)
-                               (list "--ignore-dir" dir))
-                             xref-js2-ignored-dirs)
-               ,@(seq-mapcat (lambda (file)
-                               (list "--ignore" file))
-                             xref-js2-ignored-files)
-               ,regexp))
+      (let* ((search-tuple (cond ;; => (prog-name . function-to-get-args)
+                            ((eq xref-js2-search-program 'rg)
+                             '("rg" . xref-js2--search-rg-get-args))
+                            (t ;; (eq xref-js2-search-program 'ag)
+                             '("ag" . xref-js2--search-ag-get-args))))
+             (search-program (car search-tuple))
+             (search-args    (remove nil ;; rm in case no search args given
+                                     (funcall (cdr search-tuple) regexp))))
+        (apply #'process-file (executable-find search-program) nil t nil search-args))
+
       (goto-char (point-min))
       (while (re-search-forward "^\\(.+\\)$" nil t)
         (push (match-string-no-properties 1) matches)))
@@ -169,6 +193,36 @@ concatenated together into one regexp, expanding occurrences of
                 (seq-map (lambda (match)
                            (xref-js2--candidate symbol match))
                          matches))))
+
+(defun xref-js2--search-ag-get-args (regexp)
+  "aggregate command line arguments to search for `regexp' using ag"
+  `(,@xref-js2-ag-arguments
+    ,@(seq-mapcat (lambda (dir)
+                    (list "--ignore-dir" dir))
+                  xref-js2-ignored-dirs)
+    ,@(seq-mapcat (lambda (file)
+                    (list "--ignore" file))
+                  xref-js2-ignored-files)
+    ,regexp))
+
+(defun xref-js2--search-rg-get-args (regexp)
+  "aggregate command line arguments to search for `regexp' using ripgrep"
+  `(,@xref-js2-rg-arguments
+    ,@(if (not xref-js2-js-extensions)
+          nil ;; no filtering based on extension
+        (seq-mapcat (lambda (ext)
+                      (list "-g" (concat "*." ext)))
+                    xref-js2-js-extensions))
+    ,@(seq-mapcat (lambda (dir)
+                    (list "-g" (concat "!"                               ; exclude not include
+                                       dir                               ; directory string
+                                       (unless (string-suffix-p "/" dir) ; pattern for a directory
+                                         "/"))))                         ; must end with a slash
+                  xref-js2-ignored-dirs)
+    ,@(seq-mapcat (lambda (pattern)
+                    (list "-g" (concat "!" pattern)))
+                  xref-js2-ignored-files)
+    ,regexp))
 
 (defun xref-js2--false-positive (candidate)
   "Return non-nil if CANDIDATE is a false positive.
@@ -199,7 +253,6 @@ Filtering is done using the AST from js2-mode."
       (ignore-errors
         (vc-root-dir))
       (user-error "You are not in a project")))
-
 
 (defun xref-js2--candidate (symbol match)
   "Return a candidate alist built from SYMBOL and a raw MATCH result.
