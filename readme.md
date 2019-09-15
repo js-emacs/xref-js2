@@ -20,22 +20,34 @@ pass on result candidates and eliminates possible false positives using
 
 - Emacs 25.1
 - `ag` (the [silver searcher](http://geoff.greer.fm/ag/))
+  - or `rg` ([ripgrep](https://github.com/BurntSushi/ripgrep))
 - js2-mode
 
 ## Installation
 
 If you use `js2-mode`, `M-.` will be bound by `js2`, you might want to unbind it:
 
-```
+```elisp
 (define-key js2-mode-map (kbd "M-.") nil)
 ```
 
 Then you need to add the xref backend:
 
-```
+```elisp
 (add-hook 'js2-mode-hook (lambda ()
   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
 ```
+
+## Customisations
+By default, `xref-js2` will use `ag` for search operations, to switch to using `rg` put the following into your config file and ensure the ripgrep executeable is visible from your **PATH** environment variable:
+
+```elisp
+(setq xref-js2-search-program 'rg)
+```
+
+If you have issues with `xref-js2` using `rg` not searching certain files, ensure the extension of those files is included in `xref-js2-js-extensions`.
+
+You can further customize the execution of `ag` or `rg` by `xref-js2` by changing `xref-js2-ag-arguments` & `xref-js2-rg-arguments` respectively. Though take care when doing so, many of these are used to produce an output which `xref-js2` can understand.
 
 ## Keybindings
 
