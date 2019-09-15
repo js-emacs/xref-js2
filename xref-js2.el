@@ -46,7 +46,7 @@
 (require 'vc)
 
 (defcustom xref-js2-search-program 'ag
-  "The backend program used for searching"
+  "The backend program used for searching."
   :type 'symbol
   :group 'xref-js2
   :options '(ag rg))
@@ -195,7 +195,7 @@ concatenated together into one regexp, expanding occurrences of
                          matches))))
 
 (defun xref-js2--search-ag-get-args (regexp)
-  "aggregate command line arguments to search for `regexp' using ag"
+  "Aggregate command line arguments to search for REGEXP using ag."
   `(,@xref-js2-ag-arguments
     ,@(seq-mapcat (lambda (dir)
                     (list "--ignore-dir" dir))
@@ -206,7 +206,7 @@ concatenated together into one regexp, expanding occurrences of
     ,regexp))
 
 (defun xref-js2--search-rg-get-args (regexp)
-  "aggregate command line arguments to search for `regexp' using ripgrep"
+  "Aggregate command line arguments to search for REGEXP using ripgrep."
   `(,@xref-js2-rg-arguments
     ,@(if (not xref-js2-js-extensions)
           nil ;; no filtering based on extension
