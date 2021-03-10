@@ -7,7 +7,7 @@
 ;; Keywords: javascript, convenience, tools
 ;; Version: 1.0
 ;; Package: xref-js2
-;; Package-Requires: ((emacs "25") (js2-mode "20150909"))
+;; Package-Requires: ((emacs "25.1") (js2-mode "20150909"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -123,7 +123,7 @@ In each regexp string, '%s' is expanded with the searched symbol."
            (xref-js2--find-definitions symbol)))
 
 (cl-defmethod xref-backend-identifier-completion-table ((_backend (eql xref-js2)))
-  "Return a list of terms for completions taken from the symbols in the current buffer.
+  "Return a list of terms for completions from symbols in the current buffer.
 
 The current implementation returns all the words in the buffer,
 which is really sub optimal."
@@ -227,8 +227,7 @@ concatenated together into one regexp, expanding occurrences of
 (defun xref-js2--false-positive (candidate)
   "Return non-nil if CANDIDATE is a false positive.
 Filtering is done using the AST from js2-mode."
-  (let* ((file (map-elt candidate 'file))
-         (buffer-open (get-file-buffer file)))
+  (let ((file (map-elt candidate 'file)))
     (prog1
         (with-current-buffer (find-file-noselect file t)
           (save-excursion
