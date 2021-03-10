@@ -1,6 +1,6 @@
 ;;; xref-js2.el --- Jump to references/definitions using ag & js2-mode's AST -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2016 Nicolas Petton
+;; Copyright (C) 2016-2021 Nicolas Petton
 
 ;; Author: Nicolas Petton <nicolas@petton.fr>
 ;; URL: https://github.com/NicolasPetton/xref-js2
