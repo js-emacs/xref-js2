@@ -56,16 +56,9 @@
   :type 'list
   :group 'xref-js2)
 
-(defcustom xref-js2-js-extensions '("js" "mjs" "jsx" "ts" "tsx")
-  "Extensions for file types xref-js2 is expected to search.
-warning, this is currently only supported by ripgrep, not ag.
-
-if an empty-list/nil no filtering based on file extension will
-take place."
-  :type 'list
-  :group 'xref-js2)
-
 (defcustom xref-js2-rg-arguments '("--no-heading"
+                                   "--type" "js"
+                                   "--type" "ts"
                                    "--line-number"    ; not activated by default on comint
                                    "--pcre2"          ; provides regexp backtracking
                                    "--ignore-case"    ; ag is case insensitive by default
@@ -208,11 +201,6 @@ concatenated together into one regexp, expanding occurrences of
 (defun xref-js2--search-rg-get-args (regexp)
   "Aggregate command line arguments to search for REGEXP using ripgrep."
   `(,@xref-js2-rg-arguments
-    ,@(if (not xref-js2-js-extensions)
-          nil ;; no filtering based on extension
-        (seq-mapcat (lambda (ext)
-                      (list "-g" (concat "*." ext)))
-                    xref-js2-js-extensions))
     ,@(seq-mapcat (lambda (dir)
                     (list "-g" (concat "!"                               ; exclude not include
                                        dir                               ; directory string
