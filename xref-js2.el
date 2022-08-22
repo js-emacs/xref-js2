@@ -177,7 +177,9 @@ concatenated together into one regexp, expanding occurrences of
              (search-program (car search-tuple))
              (search-args    (remove nil ;; rm in case no search args given
                                      (funcall (cdr search-tuple) regexp))))
-        (apply #'process-file (executable-find search-program) nil t nil search-args))
+        (apply #'process-file
+               (executable-find search-program (file-remote-p default-directory))
+               nil t nil search-args))
 
       (goto-char (point-max)) ;; NOTE maybe redundant
       (while (re-search-backward "^\\(.+\\)$" nil t)
